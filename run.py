@@ -1,4 +1,4 @@
-"""Nightly run: dedupe -> sources (prune/explore + scrape) -> verify -> logos -> research -> Run Log.
+"""Weekly run: dedupe -> sources (prune/explore + scrape) -> verify -> logos -> research -> Run Log.
 
     python run.py              # full run against Airtable
     python run.py --dry-run    # read Airtable, write nothing, log what would change

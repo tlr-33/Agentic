@@ -1,7 +1,7 @@
 # Polsky Sourcing Tool
 
 Finds every UChicago-affiliated startup, verifies it, and keeps its profile current in the
-**Polsky Sourcing Project** Airtable base. Runs nightly on GitHub Actions.
+**Polsky Sourcing Project** Airtable base. Runs weekly (Mondays) on GitHub Actions.
 
 ## How it works
 
@@ -29,6 +29,6 @@ Airtable **Sources** table. To add a new source, add a scraper to `sourcing/scra
 ## Setup
 
 1. Repo **Settings → Secrets → Actions**: add `AIRTABLE_TOKEN`, `AIRTABLE_BASE_ID`, and `ANTHROPIC_API_KEY` (optional; without it, Layers 2–3 skip their LLM steps).
-2. **Actions → nightly-sourcing → Run workflow** (tick *dry run* to preview), or wait for the 5am CT schedule.
+2. **Actions → nightly-sourcing → Run workflow** (tick *dry run* to preview), or wait for the Monday 5am CT run.
 
 Local: `pip install -r requirements.txt`, export the same variables, `python run.py --dry-run`.

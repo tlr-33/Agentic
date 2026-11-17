@@ -4,7 +4,7 @@
 # -- Budget (resource allocation) ---------------------------------------------
 # 1 unit = 1 page fetch or 1 web search. Change a number, commit, and the next run uses it.
 budget:
-  units_per_run: 60         # total scraper effort per nightly run
+  units_per_run: 60         # total scraper effort per weekly run (a cap; most runs use far less)
   explore_share: 0.15       # slice reserved for Trial sources (bandit-style exploration)
   max_units_per_trial: 5    # cap per Trial source per run
   min_units_per_active: 2   # floor so no Active source is starved
@@ -35,10 +35,10 @@ directory_skip: [abbvie, celgene, celegene, phillips 66, university, uiuc, uchic
 # -- Agents -------------------------------------------------------------------
 manager:                    # Layer 2 verification (skipped until ANTHROPIC_API_KEY is set)
   model: claude-haiku-5-5
-  max_candidates_per_run: 40
+  max_candidates_per_run: 100  # weekly runs, so bigger batches (clears the backlog in ~2 runs)
 research:                   # Layer 3 profile research (skipped until ANTHROPIC_API_KEY is set)
   model: claude-sonnet-5-5
-  max_profiles_per_run: 20
+  max_profiles_per_run: 50    # covers the 90-day refresh (~12/week) plus new startups
 logos:                      # Layer 3 logos (no API key needed)
   max_per_run: 80
 
