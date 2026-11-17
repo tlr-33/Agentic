@@ -1,0 +1,46 @@
+# Polsky Sourcing Tool: everything you would normally tune lives in this file.
+# Per-source status (Active / Trial / Proposed / Pruned) lives in the Airtable "Sources" table.
+
+# -- Budget (resource allocation) ---------------------------------------------
+# 1 unit = 1 page fetch or 1 web search. Change a number, commit, and the next run uses it.
+budget:
+  units_per_run: 60         # total scraper effort per nightly run
+  explore_share: 0.15       # slice reserved for Trial sources (bandit-style exploration)
+  max_units_per_trial: 5    # cap per Trial source per run
+  min_units_per_active: 2   # floor so no Active source is starved
+  prune_if_yield_below: 1   # yield = new verified startups per 10 units
+  prune_after_runs: 2       # never judge a source before this many runs
+  trial_runs: 2             # runs a new source gets before it is promoted or pruned
+
+# Optional: fix a source's share (0-1) of the non-explore budget, by its Airtable name.
+# Leave empty to split by yield.
+pin_shares: {}
+#  Polsky news feed: 0.6
+
+# -- Source inputs ------------------------------------------------------------
+# Sources whose input is a fixed list of pages. Add a URL and the next run picks it up.
+source_urls:
+  Demo day & exhibitor lists:
+    - https://polsky.uchicago.edu/2026/07/13/uchicago-deep-tech-demo-day-to-spotlight-22-emerging-ventures-during-techchicago-week/
+    - https://polsky.uchicago.edu/2026/06/09/40-startups-to-present-at-midwest-deep-tech-demo-day-in-san-francisco/
+    - https://polsky.uchicago.edu/2026/06/25/third-coast-foundry-celebrates-grand-opening-showcases-40-deep-tech-startups-at-demo-day/
+    - https://polsky.uchicago.edu/2026/10/19/meet-the-30-semifinalists-in-alchemist-chicagos-second-cohort/
+    - https://polsky.uchicago.edu/2026/05/06/the-polsky-center-announces-the-20-startups-selected-for-india-deep-tech-accelerator/
+    - https://polsky.uchicago.edu/2026/05/05/the-polsky-center-announces-2026-build-and-launch-summer-accelerator-cohorts/
+    - https://polsky.uchicago.edu/2026/08/13/8-students-receive-2026-polsky-founders-fund-fellowships-to-work-on-their-ventures-full-time/
+
+# Polsky directory names that are never startups (case-insensitive substring of the name).
+directory_skip: [abbvie, celgene, celegene, phillips 66, university, uiuc, uchicago, polsky, foundation, center for]
+
+# -- Agents -------------------------------------------------------------------
+manager:                    # Layer 2 verification (skipped until ANTHROPIC_API_KEY is set)
+  model: claude-haiku-5-5
+  max_candidates_per_run: 40
+research:                   # Layer 3 profile research (skipped until ANTHROPIC_API_KEY is set)
+  model: claude-sonnet-5-5
+  max_profiles_per_run: 20
+logos:                      # Layer 3 logos (no API key needed)
+  max_per_run: 80
+
+airtable:
+  max_records: 950          # Free plan caps a base at 1,000 records; stop creating rows before that
