@@ -1,0 +1,32 @@
+name: nightly-sourcing
+
+on:
+  schedule:
+    - cron: "0 11 * * *"   # 11:00 UTC = 5-6am Chicago
+  workflow_dispatch:         # "Run workflow" button in the Actions tab
+    inputs:
+      dry_run:
+        description: "Read Airtable but write nothing"
+        type: boolean
+        default: false
+
+concurrency: nightly-sourcing  # never run two at once
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: sudo apt-get install -y libcairo2   # renders SVG logos
+      - run: pip install -r requirements.txt
+      - run: pytest -q
+      - run: python run.py ${{ inputs.dry_run && '--dry-run' || '' }}
+        env:
+          AIRTABLE_TOKEN: ${{ secrets.AIRTABLE_TOKEN }}
+          AIRTABLE_BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
